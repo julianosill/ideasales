@@ -12,7 +12,7 @@ import { WeekCard } from './_components/week-card'
 export default function Home() {
   return (
     <main className="grid grid-cols-2 gap-8">
-      <header className="col-span-2 flex flex-wrap items-end justify-between gap-4">
+      <header className="col-span-2 flex flex-wrap items-end justify-between gap-4 pt-2">
         <h2 className="text-3xl font-medium text-accent-foreground">
           Painel inicial
         </h2>
