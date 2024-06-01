@@ -16,18 +16,6 @@ export function Header() {
 
       <HeaderNavigation />
 
-      <Button
-        variant="outline"
-        size="sm"
-        className="gap-1.5 border-primary/25 pr-3 text-primary hover:border-accent-foreground/25"
-        asChild
-      >
-        <Link href="/sales/add">
-          <Plus className="size-3.5" />
-          Adicionar venda
-        </Link>
-      </Button>
-
       <ThemeToggle />
       <AccountMenu />
     </header>

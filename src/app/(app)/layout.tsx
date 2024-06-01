@@ -4,9 +4,9 @@ import { Header } from '@/components/header/header'
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="container flex flex-col gap-12">
+    <div className="container">
       <Header />
-      {children}
+      <div className="pb-8 pt-12">{children}</div>
     </div>
   )
 }
