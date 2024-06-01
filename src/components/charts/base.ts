@@ -143,7 +143,7 @@ export function getDefaultAxis(theme?: string) {
 export function getTooltipOptions(theme?: string) {
   const isLight = theme === 'light'
 
-  const options: Partial<TooltipOptions<'bar' | 'line'>> = {
+  const options: Partial<TooltipOptions<'bar' | 'line' | 'doughnut'>> = {
     enabled: true,
     displayColors: false,
     borderWidth: 1,
