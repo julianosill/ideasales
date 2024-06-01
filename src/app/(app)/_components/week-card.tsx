@@ -15,10 +15,15 @@ export function WeekCard(props: ComponentProps<'div'>) {
             title="Faturamento"
             valueInCents={7264038}
             percentage={-2}
+            comparedTo="em relação à semana anterior"
           />
-          <ResumeCard.Number title="Vendas" number={61} percentage={0} />
+          <ResumeCard.Number
+            title="Vendas"
+            number={61}
+            percentage={0}
+            comparedTo="em relação à semana anterior"
+          />
         </div>
-        <ResumeCard.Relation>Em relação à semana anterior</ResumeCard.Relation>
       </ResumeCard.Content>
     </ResumeCard.Root>
   )

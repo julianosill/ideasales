@@ -15,10 +15,15 @@ export function MonthCard(props: ComponentProps<'div'>) {
             title="Faturamento"
             valueInCents={24620432}
             percentage={8}
+            comparedTo="em relação ao mês anterior"
           />
-          <ResumeCard.Number title="Vendas" number={237} percentage={2} />
+          <ResumeCard.Number
+            title="Vendas"
+            number={237}
+            percentage={2}
+            comparedTo="em relação ao mês anterior"
+          />
         </div>
-        <ResumeCard.Relation>Em relação ao mês anterior</ResumeCard.Relation>
       </ResumeCard.Content>
     </ResumeCard.Root>
   )

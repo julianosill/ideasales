@@ -1,15 +1,15 @@
-'use client'
-
-import { ArrowDown, ArrowUp, Minus } from 'lucide-react'
 import type { ComponentProps } from 'react'
 
 import { cn } from '@/lib/utils'
 import { formatCurrency } from '@/utils/format-currency'
 import { formatNumber } from '@/utils/format-number'
 
+import { Percentage } from './percentage'
+
 interface BaseProps extends ComponentProps<'div'> {
   title: string
   percentage: number
+  comparedTo: string
 }
 
 interface NumberProps extends BaseProps {
@@ -29,13 +29,10 @@ export function ResumeCardNumber({
   number,
   valueInCents,
   percentage,
+  comparedTo,
   className,
   ...props
 }: ResumeCardNumberProps) {
-  const growth = percentage > 0
-  const stable = percentage === 0
-  const decline = percentage < 0
-
   return (
     <div>
       <h4 className="pb-1.5 text-foreground">{title}</h4>
@@ -51,30 +48,7 @@ export function ResumeCardNumber({
           {valueInCents && formatCurrency(valueInCents)}
         </span>
 
-        <span
-          className={cn(
-            'flex items-center gap-1 rounded bg-border px-1.5 py-0.5 text-sm',
-            growth && 'bg-success/75 text-success-foreground',
-            stable && 'bg-muted text-muted-foreground',
-            decline && 'bg-error/75 text-error-foreground',
-          )}
-        >
-          {growth && (
-            <>
-              +{percentage}% <ArrowUp className="size-3" />
-            </>
-          )}
-          {stable && (
-            <>
-              {percentage}% <Minus className="size-3" />
-            </>
-          )}
-          {decline && (
-            <>
-              {percentage}% <ArrowDown className="size-3" />
-            </>
-          )}
-        </span>
+        <Percentage value={percentage} tooltipText={comparedTo} />
       </div>
     </div>
   )
