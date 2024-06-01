@@ -1,9 +1,7 @@
-import { Plus } from 'lucide-react'
 import Link from 'next/link'
 
 import { Logo } from '../logo'
 import { ThemeToggle } from '../theme/toogle'
-import { Button } from '../ui/button'
 import { AccountMenu } from './account-menu'
 import { HeaderNavigation } from './navigation'
 
