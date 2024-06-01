@@ -41,7 +41,7 @@ export function ResumeCardNumber({
       <h4 className="pb-1.5 text-foreground">{title}</h4>
       <div
         className={cn(
-          'flex flex-wrap items-center gap-x-3 gap-y-1.5',
+          'flex min-w-28 flex-wrap items-center gap-x-3 gap-y-1.5',
           className,
         )}
         {...props}
