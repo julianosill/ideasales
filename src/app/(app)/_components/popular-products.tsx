@@ -1,6 +1,7 @@
 'use client'
 
 import type { ChartData, TooltipCallbacks } from 'chart.js'
+import { useTheme } from 'next-themes'
 import type { ComponentProps } from 'react'
 import colors from 'tailwindcss/colors'
 
@@ -12,9 +13,11 @@ import { formatNumber } from '@/utils/format-number'
 import { popularProducts } from '@/utils/sample-data'
 
 export function PopularProducts(props: ComponentProps<'div'>) {
+  const { theme } = useTheme()
+
   const productNames: string[] = []
   const productQuantities: number[] = []
-  const doughnutDataOptions = getDoughnutDataOptions()
+  const doughnutDataOptions = getDoughnutDataOptions({ theme })
 
   popularProducts.forEach((product) => {
     productNames.push(product.name)

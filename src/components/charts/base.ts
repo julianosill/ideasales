@@ -80,13 +80,13 @@ export function getLineDataOptions({ theme, twColor }: DataOptionsProps) {
   return options
 }
 
-export function getDoughnutDataOptions() {
+export function getDoughnutDataOptions({ theme }: DataOptionsProps) {
   const options: Partial<ChartDataset<'doughnut'>> = {
-    borderColor: 'transparent',
+    borderColor: theme === 'light' ? 'hsl(0 0% 100%)' : 'hsl(240 5% 15%)',
     borderRadius: 6,
-    offset: 16,
-    rotation: -45,
-    hoverOffset: 24,
+    borderWidth: 6,
+    hoverBorderColor: theme === 'light' ? 'hsl(0 0% 100%)' : 'hsl(240 5% 15%)',
+    hoverBorderWidth: 2,
   }
 
   return options
