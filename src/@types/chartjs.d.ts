@@ -21,7 +21,7 @@ export interface AxisOptions
 
 export interface ChartOptionsProps {
   theme?: string
-  chartOptions?: ChartOptions<'bar' | 'line' | 'doughnut'>
+  chartOptions?: ChartOptions<'bar' | 'line'>
   xAxis?: Partial<AxisOptions>
   yAxis?: Partial<AxisOptions>
 }

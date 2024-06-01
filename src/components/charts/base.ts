@@ -1,4 +1,5 @@
 import {
+  ArcElement,
   BarElement,
   CategoryScale,
   Chart as ChartJS,
@@ -30,6 +31,7 @@ ChartJS.register(
   PointElement,
   LineElement,
   BarElement,
+  ArcElement,
   Tooltip,
   Filler,
 )
@@ -78,6 +80,18 @@ export function getLineDataOptions({ theme, twColor }: DataOptionsProps) {
   return options
 }
 
+export function getDoughnutDataOptions() {
+  const options: Partial<ChartDataset<'doughnut'>> = {
+    borderColor: 'transparent',
+    borderRadius: 6,
+    offset: 16,
+    rotation: -45,
+    hoverOffset: 24,
+  }
+
+  return options
+}
+
 export function getChartOptions({
   theme,
   chartOptions,
@@ -92,7 +106,7 @@ export function getChartOptions({
     ? mergeObjects(defaultAxis, yAxis)
     : defaultAxis
 
-  const baseOptions: ChartOptions<'bar' | 'line' | 'doughnut'> = {
+  const baseOptions: ChartOptions<'bar' | 'line'> = {
     responsive: true,
     aspectRatio: 3,
     ...chartOptions,
@@ -129,7 +143,7 @@ export function getDefaultAxis(theme?: string) {
 export function getTooltipOptions(theme?: string) {
   const isLight = theme === 'light'
 
-  const options: Partial<TooltipOptions<'bar' | 'line' | 'doughnut'>> = {
+  const options: Partial<TooltipOptions<'bar' | 'line'>> = {
     enabled: true,
     displayColors: false,
     borderWidth: 1,
@@ -168,6 +182,7 @@ export function getChartBackgroundGradient({
 
   return gradient
 }
+
 export const defaultTooltipCallbacks: TooltipCallbacks<
   'bar' | 'line' | 'doughnut'
 > = {
