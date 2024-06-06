@@ -2,7 +2,7 @@ import { Link } from './ui/link'
 
 export function Footer() {
   return (
-    <footer className="flex flex-wrap justify-between gap-2 border-t pb-6 pt-4 text-sm text-muted-foreground">
+    <footer className="flex flex-wrap justify-between gap-2 border-t pb-6 pt-4 text-sm text-foreground/60">
       <div>
         <span className="font-medium">Idea Sales</span> - Relatório de vendas da
         loja <Link href="https://www.ideahome.com.br">Idea Home</Link>
