@@ -36,8 +36,8 @@ export function SearchForm({ data }: SearchFormProps) {
       defaultValues: { query: search?.value },
     })
   const queryInput = watch('query')
-  const isFormEmpty = !queryInput
   const isSubmitDisabled = !queryInput || queryInput.length < 2
+  const showClearFilter = queryInput || searchParams.get('search')
   const formErrors = formState.errors
 
   function handleSearch({ query }: FormSchema) {
@@ -83,7 +83,7 @@ export function SearchForm({ data }: SearchFormProps) {
         <span className="sr-only">Pesquisar</span>
       </Button>
 
-      {!isFormEmpty && (
+      {showClearFilter && (
         <Button type="button" variant="ghost" onClick={handleClearForm}>
           <Eraser className="size-4" />
           <span className="text-sm font-medium">Limpar filtros</span>
