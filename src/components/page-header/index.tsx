@@ -1,9 +1,9 @@
 import { BackButton } from './back-button'
-import { Header } from './root'
+import { Root } from './root'
 import { Title } from './title'
 
 export const PageHeader = {
-  Root: Header,
+  Root,
   BackButton,
   Title,
 }
