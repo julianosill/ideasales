@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: ideasales-postgres
+    image: bitnami/postgresql
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE_NAME}

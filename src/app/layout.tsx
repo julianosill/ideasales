@@ -13,8 +13,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | IdeaSales',
-    default: 'IdeaSales',
+    template: '%s | Idea Sales',
+    default: 'Idea Sales',
   },
   description:
     'Aplicação web de relatórios de vendas da plataforma e-commerce IdeaHome.',
