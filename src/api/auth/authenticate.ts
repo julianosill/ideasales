@@ -24,10 +24,14 @@ export async function authenticate({
   password,
 }: AuthenticateProps): Promise<AuthenticateResponse> {
   const user = await prisma.user.findUnique({ where: { email } })
-  if (!user) return { message: 'auth/user-not-found' }
+  if (!user) {
+    return { message: 'auth/user-not-found' }
+  }
 
   const doesPasswordMatch = await compare(password, user.password)
-  if (!doesPasswordMatch) return { message: 'auth/incorrect-password' }
+  if (!doesPasswordMatch) {
+    return { message: 'auth/incorrect-password' }
+  }
 
   if (user.verified === false) {
     return { message: 'auth/user-not-verified' }
