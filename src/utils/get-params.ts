@@ -1,29 +1,47 @@
-import type { ReadonlyURLSearchParams } from 'next/navigation'
+import { type ReadonlyURLSearchParams } from 'next/navigation'
 import { z } from 'zod'
 
-import type { OrderType, ProductsOrderByType } from '@/@types/filter-params'
+import {
+  productsOrderByOptions,
+  usersOrderByOptions,
+  usersStatusOptions,
+} from '@/@types/filter-params'
 
-export function getParams(params: ReadonlyURLSearchParams) {
-  const pageIndex = z.coerce
+export function getPageIndexParam(params: ReadonlyURLSearchParams) {
+  const result = z.coerce
     .number()
     .min(1)
     .transform((page) => page - 1)
-    .parse(params.get('page') ?? '1')
+    .safeParse(params.get('page'))
+  return result.data ?? 0
+}
 
-  const perPage = z.coerce
-    .number()
-    .min(1)
-    .parse(params.get('perPage') ?? '10')
+export function getPerPageParam(params: ReadonlyURLSearchParams) {
+  const result = z.coerce.number().min(1).safeParse(params.get('perPage'))
+  return result.data ?? undefined
+}
 
-  const productsOrderBy: ProductsOrderByType = z
-    .enum(['date', 'sales'])
-    .parse(params.get('orderBy') ?? 'date')
+export function getUsersOrderByParam(params: ReadonlyURLSearchParams) {
+  const result = z.enum(usersOrderByOptions).safeParse(params.get('orderBy'))
+  return result.data ?? 'name'
+}
 
-  const order: OrderType = z
-    .enum(['desc', 'asc'])
-    .parse(params.get('order') ?? 'desc')
+export function getProductsOrderByParam(params: ReadonlyURLSearchParams) {
+  const result = z.enum(productsOrderByOptions).safeParse(params.get('orderBy'))
+  return result.data ?? undefined
+}
 
-  const search = z.string().parse(params.get('search') ?? '')
+export function getOrderParam(params: ReadonlyURLSearchParams) {
+  const result = z.enum(['desc', 'asc']).safeParse(params.get('order'))
+  return result.data ?? 'desc'
+}
 
-  return { pageIndex, perPage, productsOrderBy, order, search }
+export function getStatusParam(params: ReadonlyURLSearchParams) {
+  const result = z.enum(usersStatusOptions).safeParse(params.get('status'))
+  return result.data ?? undefined
+}
+
+export function getSearchParam(params: ReadonlyURLSearchParams) {
+  const result = z.string().safeParse(params.get('search'))
+  return result.data ?? ''
 }
