@@ -3,21 +3,21 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
-const alertVariants = cva(
-  'relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground',
-  {
-    variants: {
-      variant: {
-        default: 'bg-background text-foreground',
-        error:
-          'border-error-foreground/25 bg-error/40 text-error-foreground [&>svg]:text-error-foreground',
-      },
-    },
-    defaultVariants: {
-      variant: 'default',
+const alertVariants = cva('relative w-full rounded-lg border p-4', {
+  variants: {
+    variant: {
+      default: 'bg-background text-foreground',
+      secondary:
+        'border-secondary-foreground/20 bg-secondary/20 text-foreground',
+      success:
+        'border-success-foreground/25 bg-success/40 text-success-foreground',
+      error: 'border-error-foreground/25 bg-error/40 text-error-foreground',
     },
   },
-)
+  defaultVariants: {
+    variant: 'default',
+  },
+})
 
 const AlertRoot = React.forwardRef<
   HTMLDivElement,
