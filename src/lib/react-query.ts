@@ -12,7 +12,7 @@ function makeQueryClient() {
 
 let browserQueryClient: QueryClient | undefined
 
-export function getQueryClient() {
+function getQueryClient() {
   if (typeof window === 'undefined') {
     // Server: always make a new query client
     return makeQueryClient()
@@ -25,3 +25,9 @@ export function getQueryClient() {
     return browserQueryClient
   }
 }
+
+export const queryClient = getQueryClient()
+// NOTE: Avoid useState when initializing the query client if you don't
+//       have a suspense boundary between this and the code that may
+//       suspend because React will throw away the client on the initial
+//       render if it suspends and there is no boundary
