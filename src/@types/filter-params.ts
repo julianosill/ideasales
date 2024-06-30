@@ -1,5 +1,5 @@
 export type SearchFormType = {
-  searchForm?: { value: string; placeholder: string }
+  searchInput?: { value: string; placeholder: string }
 }
 
 export const usersStatusOptions = ['pending'] as const

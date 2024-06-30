@@ -1,11 +1,15 @@
 import type { SelectProps } from '@radix-ui/react-select'
 
-import type { OrderByOptions } from '@/@types/filter-params'
+import type {
+  OrderByOptions,
+  ProductsOrderByType,
+  UsersOrderByType,
+} from '@/@types/filter-params'
 
 import { Select } from '../ui/select'
 
 interface SelectOrderByProps extends SelectProps {
-  options: OrderByOptions[]
+  options: OrderByOptions<UsersOrderByType | ProductsOrderByType>[]
 }
 
 export function SelectOrderBy({ options, ...props }: SelectOrderByProps) {

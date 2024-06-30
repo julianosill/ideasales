@@ -2,10 +2,11 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { ComponentProps } from 'react'
 
 import type {
-  FormType,
   OrderByType,
   OrderType,
   ProductsOrderByType,
+  SearchFormType,
+  UsersOrderByType,
 } from '@/@types/filter-params'
 import { cn } from '@/lib/utils'
 import { updateParams } from '@/utils/update-params'
@@ -15,8 +16,8 @@ import { SelectOrderBy } from './select-order-by'
 import { ToggleOrder } from './toogle-order'
 
 interface TableFiltersProps extends ComponentProps<'div'> {
-  form?: FormType
-  orderBy: OrderByType<ProductsOrderByType>
+  form?: SearchFormType
+  orderBy: OrderByType<UsersOrderByType | ProductsOrderByType>
   order: OrderType
 }
 
@@ -50,11 +51,7 @@ export function TableFilters({
 
   return (
     <div
-      className={cn(
-        'flex gap-x-8 gap-y-4 max-sm:flex-col',
-        form ? 'justify-between' : 'justify-end',
-        className,
-      )}
+      className={cn('flex gap-x-8 gap-y-4 max-sm:flex-col', className)}
       {...props}
     >
       {form && <SearchForm data={form} />}

@@ -4,71 +4,75 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import type { FormType } from '@/@types/filter-params'
+import type { SearchFormType } from '@/@types/filter-params'
 import { updateParams } from '@/utils/update-params'
 
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
+import { InputError } from '../ui/input-error'
 
 const formSchema = z.object({
-  query: z
+  search: z
     .string()
-    .min(2, { message: 'A busca deve conter 2 ou mais letras.' })
-    .optional(),
+    .min(2, { message: 'A busca deve conter 2 ou mais letras' }),
 })
 
 type FormSchema = z.infer<typeof formSchema>
 
 interface SearchFormProps {
-  data: FormType
+  data: SearchFormType
 }
 
 export function SearchForm({ data }: SearchFormProps) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const { searchInput } = data
 
-  const { search } = data
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors: formErrors },
+  } = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { search: searchInput?.value },
+  })
+  const textInput = watch('search')
+  const isSubmitDisabled = !textInput || textInput.length < 2
+  const showClearFilter = textInput || searchParams.get('search')
 
-  const { register, handleSubmit, reset, watch, formState } =
-    useForm<FormSchema>({
-      resolver: zodResolver(formSchema),
-      defaultValues: { query: search?.value },
-    })
-  const queryInput = watch('query')
-  const isSubmitDisabled = !queryInput || queryInput.length < 2
-  const showClearFilter = queryInput || searchParams.get('search')
-  const formErrors = formState.errors
-
-  function handleSearch({ query }: FormSchema) {
-    if (!query) return null
+  function handleSearch({ search }: FormSchema) {
+    if (!search) return null
 
     const params = updateParams({
       searchParams,
-      params: [{ key: 'search', value: query }],
+      params: [{ key: 'search', value: search }],
       deleteParams: ['page'],
     })
     router.replace(`${pathname}?${params}`)
   }
 
   function handleClearForm() {
-    const params = updateParams({
-      searchParams,
-      deleteParams: ['search'],
-    })
-    reset({ query: '' })
+    const params = updateParams({ searchParams, deleteParams: ['search'] })
+    reset({ search: '' })
     router.replace(`${pathname}?${params}`)
   }
 
   return (
     <form onSubmit={handleSubmit(handleSearch)} className="flex flex-1 gap-2">
-      {search && (
+      {searchInput && (
         <div className="relative flex-1 sm:max-w-72">
-          <Input placeholder={search.placeholder} {...register('query')} />
-          {formErrors.query && (
-            <p className="absolute -top-5 text-xs text-error-foreground">
-              {formErrors.query.message}
-            </p>
+          <Input
+            placeholder={searchInput.placeholder}
+            {...register('search')}
+          />
+          {formErrors.search?.message && (
+            <InputError
+              text={formErrors.search.message}
+              className="-top-6 left-0"
+            />
           )}
         </div>
       )}
