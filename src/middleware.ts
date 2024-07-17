@@ -9,6 +9,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/api/auth/sign-out', request.nextUrl))
   }
 
+  // check if path starts with: /users, /products/add
+  const adminRoutesRegex = /^\/(?:users|products\/add)/
+  const currentPath = request.nextUrl.pathname
+  const isAdminRoute = adminRoutesRegex.test(currentPath)
+
+  if (isAdminRoute && session.user.role !== 'ADMIN') {
+    return NextResponse.redirect(new URL('/api/auth/sign-out', request.nextUrl))
+  }
+
   return NextResponse.next()
 }
 
