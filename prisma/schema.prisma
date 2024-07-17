@@ -20,7 +20,7 @@ model User {
   role      UserRole @default(SALES)
   verified  Boolean  @default(false)
   createdAt DateTime @default(now()) @map("created_at")
-  Token     Token[]
+  tokens    Token[]
 
   @@map("users")
 }
@@ -38,4 +38,15 @@ model Token {
   userId String @map("user_id")
 
   @@map("tokens")
+}
+
+model Product {
+  id        String   @id @default(cuid())
+  model     String   @unique
+  name      String
+  color     String
+  sales     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("products")
 }
