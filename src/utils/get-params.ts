@@ -2,6 +2,7 @@ import { type ReadonlyURLSearchParams } from 'next/navigation'
 import { z } from 'zod'
 
 import {
+  type OrderType,
   productsOrderByOptions,
   usersOrderByOptions,
   usersStatusOptions,
@@ -28,12 +29,15 @@ export function getUsersOrderByParam(params: ReadonlyURLSearchParams) {
 
 export function getProductsOrderByParam(params: ReadonlyURLSearchParams) {
   const result = z.enum(productsOrderByOptions).safeParse(params.get('orderBy'))
-  return result.data ?? undefined
+  return result.data ?? 'date'
 }
 
-export function getOrderParam(params: ReadonlyURLSearchParams) {
+export function getOrderParam(
+  params: ReadonlyURLSearchParams,
+  defaultOrder?: OrderType,
+) {
   const result = z.enum(['desc', 'asc']).safeParse(params.get('order'))
-  return result.data ?? 'desc'
+  return result.data ?? defaultOrder ?? 'desc'
 }
 
 export function getStatusParam(params: ReadonlyURLSearchParams) {

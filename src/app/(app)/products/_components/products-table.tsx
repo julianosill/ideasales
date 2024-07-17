@@ -4,38 +4,42 @@ import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 
 import type {
-  FormType,
   OrderByType,
   ProductsOrderByType,
+  SearchFormType,
 } from '@/@types/filter-params'
-import { fetchProducts } from '@/api/fetch-products'
+import { QUERY_KEYS } from '@/@types/react-query'
+import { fetchProducts } from '@/api/products/fetch-products'
 import { Pagination } from '@/components/pagination'
 import { TableFilters } from '@/components/table-filters'
 import { Table } from '@/components/ui/table'
-import { getParams } from '@/utils/get-params'
+import {
+  getOrderParam,
+  getPageIndexParam,
+  getPerPageParam,
+  getProductsOrderByParam,
+  getSearchParam,
+} from '@/utils/get-params'
 
 import { ProductsTableBody } from './products-table-body'
 import { ProductsTableBodySkeleton } from './products-table-body-skeleton'
 
 export function ProductsTable() {
   const searchParams = useSearchParams()
+  const pageIndex = getPageIndexParam(searchParams)
+  const perPage = getPerPageParam(searchParams)
+  const orderBy = getProductsOrderByParam(searchParams)
+  const order = getOrderParam(searchParams)
+  const search = getSearchParam(searchParams)
 
-  const {
-    pageIndex,
-    perPage,
-    productsOrderBy: orderBy,
-    order,
-    search,
-  } = getParams(searchParams)
-
-  const formData: FormType = {
-    search: {
+  const formOptions: SearchFormType = {
+    searchInput: {
       value: search,
       placeholder: 'Digite o nome ou modelo do produto',
     },
   }
 
-  const orderByData: OrderByType<ProductsOrderByType> = {
+  const orderByOptions: OrderByType<ProductsOrderByType> = {
     value: orderBy,
     options: [
       { value: 'sales', name: 'Vendas' },
@@ -44,15 +48,9 @@ export function ProductsTable() {
   }
 
   const { data: result, isPending } = useQuery({
-    queryKey: ['products', pageIndex, perPage, orderBy, order, search],
+    queryKey: [QUERY_KEYS.PRODUCTS, pageIndex, perPage, orderBy, order, search],
     queryFn: () =>
-      fetchProducts({
-        pageIndex,
-        perPage,
-        orderBy,
-        order,
-        query: search,
-      }),
+      fetchProducts({ pageIndex, perPage, orderBy, order, search }),
   })
 
   const products = result?.products
@@ -60,7 +58,7 @@ export function ProductsTable() {
 
   return (
     <div className="space-y-4">
-      <TableFilters form={formData} orderBy={orderByData} order={order} />
+      <TableFilters form={formOptions} orderBy={orderByOptions} order={order} />
 
       <div className="rounded-md border">
         <Table.Root>
@@ -68,6 +66,7 @@ export function ProductsTable() {
             <Table.Row>
               <Table.Head className="w-28">Modelo</Table.Head>
               <Table.Head>Produto</Table.Head>
+              <Table.Head className="w-16">Cor</Table.Head>
               <Table.Head className="w-20">Vendas</Table.Head>
               <Table.Head className="w-32 whitespace-nowrap">
                 Cadastrado em
