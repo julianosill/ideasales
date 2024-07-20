@@ -10,6 +10,7 @@ import type {
   SearchFormType,
   UsersOrderByType,
 } from '@/@types/filter-params'
+import { QUERY_KEYS } from '@/@types/react-query'
 import { fetchUsers } from '@/api/users/fetch-users'
 import { Pagination } from '@/components/pagination'
 import { TableFilters } from '@/components/table-filters'
@@ -33,7 +34,7 @@ export function UsersTable() {
   const pageIndex = getPageIndexParam(searchParams)
   const perPage = getPerPageParam(searchParams)
   const orderBy = getUsersOrderByParam(searchParams)
-  const order = getOrderParam(searchParams)
+  const order = getOrderParam(searchParams, 'asc')
   const status = getStatusParam(searchParams)
   const search = getSearchParam(searchParams)
 
@@ -52,7 +53,15 @@ export function UsersTable() {
   }
 
   const { data: result, isPending } = useQuery({
-    queryKey: ['users', pageIndex, perPage, orderBy, order, status, search],
+    queryKey: [
+      QUERY_KEYS.USERS,
+      pageIndex,
+      perPage,
+      orderBy,
+      order,
+      status,
+      search,
+    ],
     queryFn: () =>
       fetchUsers({ pageIndex, perPage, orderBy, order, status, search }),
   })
@@ -60,12 +69,13 @@ export function UsersTable() {
   const users = result?.users
   const totalUsers = result?.metadata.totalUsers ?? 0
   const pendingUsers = result?.metadata.pendingUsers ?? 0
+  const showPendingUsersWarning = pendingUsers >= 1 && status !== 'pending'
 
   return (
     <div className="space-y-4">
       <TableFilters form={formOptions} orderBy={orderByOptions} order={order} />
 
-      {pendingUsers >= 1 && (
+      {showPendingUsersWarning && (
         <Alert.Root
           variant="secondary"
           className="flex flex-wrap items-center justify-between gap-4"
@@ -73,8 +83,8 @@ export function UsersTable() {
           <div className="flex items-center gap-4">
             <AlertCircle className="size-5 min-w-5 text-muted-foreground" />
             <Alert.Description>
-              Há {pendingUsers} cadastros aguardando aprovação, clique na tag{' '}
-              <span className="font-medium">Pendente</span> para aprová-los.
+              Há {pendingUsers} cadastro(s) aguardando aprovação, clique na tag{' '}
+              <span className="font-medium">Pendente</span> para aprová-lo(s).
             </Alert.Description>
           </div>
 

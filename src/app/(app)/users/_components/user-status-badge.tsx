@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import type { UserType } from '@/@types/users'
+import { QUERY_KEYS } from '@/@types/react-query'
 import { approveUser } from '@/api/users/approve-user'
 import type { FetchUsersResponse } from '@/api/users/fetch-users'
 import { AlertDialog } from '@/components/ui/alert-dialog'
@@ -8,13 +8,16 @@ import { Badge } from '@/components/ui/badge'
 import { Tooltip } from '@/components/ui/tooltip'
 import { toast } from '@/components/ui/use-toast'
 
-export function UserStatusBage({ user }: { user: UserType }) {
+import { useUsersTable } from './users-table-context'
+
+export function UserStatusBage() {
+  const { user } = useUsersTable()
   const queryClient = useQueryClient()
   const isVerified = user.verified
 
   function updateUserStatusOnCache(userId: string, verified: boolean) {
     const usersListCache = queryClient.getQueriesData<FetchUsersResponse>({
-      queryKey: ['users'],
+      queryKey: [QUERY_KEYS.USERS],
     })
 
     usersListCache.forEach(([cacheKey, cacheData]) => {
@@ -92,7 +95,10 @@ export function UserStatusBage({ user }: { user: UserType }) {
         </AlertDialog.Header>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>Cancelar</AlertDialog.Cancel>
-          <AlertDialog.Action onClick={() => approveUserFn(user.id)}>
+          <AlertDialog.Action
+            variant="default"
+            onClick={() => approveUserFn(user.id)}
+          >
             Aprovar
           </AlertDialog.Action>
         </AlertDialog.Footer>

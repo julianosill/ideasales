@@ -1,36 +1,22 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Loader2, Trash2 } from 'lucide-react'
 
-import type { UserType } from '@/@types/users'
+import { QUERY_KEYS } from '@/@types/react-query'
 import { deleteUser } from '@/api/users/delete-user'
-import type { FetchUsersResponse } from '@/api/users/fetch-users'
+import { DeleteIconButton } from '@/components/icon-buttons/delete-icon-button'
 import { AlertDialog } from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 
-export function UsersTableActions({ user }: { user: UserType }) {
+import { useUsersTable } from './users-table-context'
+
+export function UsersTableDelete() {
+  const { user } = useUsersTable()
   const queryClient = useQueryClient()
   const { toast } = useToast()
 
-  function deleteUserOnCache(userId: string) {
-    const usersListCache = queryClient.getQueriesData<FetchUsersResponse>({
-      queryKey: ['users'],
-    })
-
-    usersListCache.forEach(([cacheKey, cacheData]) => {
-      if (!cacheData) return
-
-      queryClient.setQueryData<FetchUsersResponse>(cacheKey, {
-        ...cacheData,
-        users: cacheData.users.filter((user) => user.id !== userId),
-      })
-    })
-  }
-
   const { mutateAsync: deleteUserFn, isPending: isDeletingUser } = useMutation({
     mutationFn: deleteUser,
-    async onSuccess(_, id) {
-      deleteUserOnCache(id)
+    async onSuccess() {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USERS] })
       toast({
         description: (
           <p>
@@ -54,38 +40,26 @@ export function UsersTableActions({ user }: { user: UserType }) {
   return (
     <AlertDialog.Root>
       <AlertDialog.Trigger asChild>
-        <Button
-          variant="outline"
-          size="icon-xs"
-          className="group"
-          disabled={isDeletingUser}
-        >
-          <Loader2 className="absolute size-4 animate-spin opacity-0 group-disabled:opacity-100" />
-          <Trash2 className="size-4 group-disabled:opacity-0" />
-          <span className="sr-only">Excluir</span>
-        </Button>
+        <DeleteIconButton disabled={isDeletingUser} />
       </AlertDialog.Trigger>
 
       <AlertDialog.Content>
         <AlertDialog.Header>
-          <AlertDialog.Title>
+          <AlertDialog.Title className="xs:w-10/12">
             Deseja excluir{' '}
             <span className="font-semibold text-accent-foreground">
               {user.name}
             </span>
             ?
           </AlertDialog.Title>
-          <AlertDialog.Description>
-            Ao confirmar, esta conta será excluída. Lembre-se, esta operação não
-            poderá ser revertida.
+          <AlertDialog.Description className="flex flex-col gap-0.5">
+            <span>Ao confirmar, esta conta será excluída.</span>
+            <span>Atenção: esta operação não poderá ser revertida.</span>
           </AlertDialog.Description>
         </AlertDialog.Header>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>Cancelar</AlertDialog.Cancel>
-          <AlertDialog.Action
-            onClick={() => deleteUserFn(user.id)}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
+          <AlertDialog.Action onClick={() => deleteUserFn(user.id)}>
             Excluir
           </AlertDialog.Action>
         </AlertDialog.Footer>

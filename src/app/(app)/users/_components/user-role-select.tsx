@@ -1,12 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { type UserRole, userRoles, type UserType } from '@/@types/users'
+import { QUERY_KEYS } from '@/@types/react-query'
+import { type UserRole, userRoles } from '@/@types/users'
 import type { FetchUsersResponse } from '@/api/users/fetch-users'
 import { updateUserRole } from '@/api/users/update-user-role'
 import { Select } from '@/components/ui/select'
 import { toast } from '@/components/ui/use-toast'
 
-export function UserRoleSelect({ user }: { user: UserType }) {
+import { useUsersTable } from './users-table-context'
+
+export function UserRoleSelect() {
+  const { user } = useUsersTable()
   const queryClient = useQueryClient()
 
   const roles = Object.entries(userRoles).map(([role, name]) => {
@@ -15,7 +19,7 @@ export function UserRoleSelect({ user }: { user: UserType }) {
 
   function updateUserRoleOnCache(userId: string, role: UserRole) {
     const usersListCache = queryClient.getQueriesData<FetchUsersResponse>({
-      queryKey: ['users'],
+      queryKey: [QUERY_KEYS.USERS],
     })
 
     usersListCache.forEach(([cacheKey, cacheData]) => {
@@ -56,9 +60,11 @@ export function UserRoleSelect({ user }: { user: UserType }) {
       },
     })
 
+  const isSelectDisabled = !user.verified || isUpdatingRole
+
   return (
     <Select.Root
-      disabled={!user.verified || isUpdatingRole}
+      disabled={isSelectDisabled}
       value={user.role}
       onValueChange={(value: UserRole) => {
         updateUserRoleFn({ userId: user.id, role: value })
